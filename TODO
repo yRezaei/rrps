@@ -6,3 +6,4 @@ Todo:
   ☐ Add std::luck_quard whereever race condition may happen
   ☐ Save who registered for what in rrps manager
   ☐ Add functionality to create mape of connections
+  ☐ Add gtest for testing basic functionality
