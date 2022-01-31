@@ -1,0 +1,8 @@
+
+Todo:
+  ☐ Response service must register a function
+  ☐ Request service must recive the registered function
+  ☐ Publisher must recive the subscriber callback
+  ☐ Add std::luck_quard whereever race condition may happen
+  ☐ Save who registered for what in rrps manager
+  ☐ Add functionality to create mape of connections
