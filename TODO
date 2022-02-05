@@ -3,7 +3,7 @@ Todo:
   ✔ Response service must register a function @done(22-02-04 09:38)
   ✔ Request service must recive the registered function @done(22-02-04 09:38)
   ✔ Publisher must recive the subscriber callback @done(22-02-04 09:38)
-  ☐ Add std::luck_quard whereever race condition may happen
-  ☐ Save who registered for what in rrps manager
+  ✔ Add std::luck_quard whereever race condition may happen @done(22-02-05 07:58)
+  ☐ Save who registeres provided service or registered service in rrps manager
   ☐ Add functionality to create mape of connections
   ☐ Add gtest for testing basic functionality

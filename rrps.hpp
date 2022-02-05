@@ -3,8 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
-#include <string>
-#include <functional>
+#include <mutex>
 
 #include "i_service_provider.hpp"
 #include "i_service_requester.hpp"
@@ -15,12 +14,14 @@ namespace rrps
     class ReqResPubSubManager : public IServiceProvider<T_return, T_arg>, public IServiceRequester<T_return, T_arg>
     {
     private:
+        std::mutex reg_mutex;
         std::unordered_map<std::string, ResponseServiceRegisterCallback<T_return, T_arg> > res_service_register_callback_list;
         std::unordered_map<std::string, SubscribeServiceRegisterCallback<T_arg> > sub_service_register_callback_list;
 
     public:
         bool add_response_service_register_callback(const std::string &res_service_id, ResponseServiceRegisterCallback<T_return, T_arg> res_register_callback) override
         {
+            const std::lock_guard<std::mutex> lock(reg_mutex);
             if (res_register_callback)
             {
                 std::cout << "The service id \"" << res_service_id << "\" registered." << std::endl;
@@ -36,6 +37,7 @@ namespace rrps
 
         ResponseCallback<T_return, T_arg> get_response_service(const std::string& resquester_id, const std::string& response_service_id) override
         {
+            const std::lock_guard<std::mutex> lock(reg_mutex);
             if (does_service_exists(response_service_id))
             {
                 std::cout << resquester_id << " requested the \"" << response_service_id << "\" service." << std::endl;
@@ -56,6 +58,7 @@ namespace rrps
 
         bool add_publish_service_register_callback(const std::string &pub_service_id, SubscribeServiceRegisterCallback<T_arg> sub_register_callback) override
         {
+            const std::lock_guard<std::mutex> lock(reg_mutex);
             if (sub_register_callback)
             {
                 std::cout << "Publish service \"" << pub_service_id << "\" is registered." << std::endl;
@@ -71,6 +74,7 @@ namespace rrps
 
         bool register_subscriber(const std::string& subscriber_id, const std::string& pub_service_id, SubCallback<T_arg> sub_callback) override
         {
+            const std::lock_guard<std::mutex> lock(reg_mutex);
             if (sub_service_register_callback_list.find(pub_service_id) == sub_service_register_callback_list.end())
             {
                 std::cout << "ERROR: " << __FUNCTION__ << " #"<< __LINE__ << " No such a \""<< pub_service_id << "\" service exist " << std::endl;
