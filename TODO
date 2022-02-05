@@ -4,6 +4,7 @@ Todo:
   ✔ Request service must recive the registered function @done(22-02-04 09:38)
   ✔ Publisher must recive the subscriber callback @done(22-02-04 09:38)
   ✔ Add std::luck_quard whereever race condition may happen @done(22-02-05 07:58)
+  ✔ seperate RRPSCallbaclInit into two provider and requester interfaces @done(22-02-05 10:41)
   ☐ Save who registeres provided service or registered service in rrps manager
   ☐ Add functionality to create mape of connections
   ☐ Add gtest for testing basic functionality

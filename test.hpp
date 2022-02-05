@@ -5,7 +5,7 @@
 #include <chrono>
 #include <random>
 
-struct ArgumentType
+struct BaseObj
 {
     int a;
     double d;
@@ -29,23 +29,14 @@ public:
     int operator()() { return distr(gen); }
 };
 
-using RRPSManager = rrps::ReqResPubSubManager<ArgumentType, ArgumentType>;
-
-class IRRPSCallbackInit
-{
-public:
-    virtual ~IRRPSCallbackInit() {}
-    virtual void submit_publish_and_response_sercices(std::shared_ptr<rrps::IServiceProvider<ArgumentType, ArgumentType>> rrpsMGR) = 0;
-    virtual void submit_subscribe_and_requests_services(std::shared_ptr<rrps::IServiceRequester<ArgumentType, ArgumentType>> rrpsMGR) = 0;
-};
-
-struct Com1 : public IRRPSCallbackInit
+struct Com1 : public rrps::IServiceProvider<BaseObj, BaseObj>
 {
 private:
     std::string id{"com1"};
-    ArgumentType arg{1, 5.5};
-    std::unordered_map<std::string, rrps::SubCallback<ArgumentType> > sub_callback_list;
+    BaseObj arg{1, 5.5};
+    std::unordered_map<std::string, rrps::SubCallback<BaseObj> > sub_callback_list;
     RandInt randInt{0, 3};
+    std::mutex arg_mutex;
 
 private:
 
@@ -53,7 +44,7 @@ private:
 public:
     void operator()()
     {
-        std::this_thread::sleep_for(std::chrono::seconds(randInt()));
+        //std::this_thread::sleep_for(std::chrono::seconds(randInt()));
         arg.a++;
         arg.d++;
         for (auto &sub : sub_callback_list)
@@ -62,9 +53,9 @@ public:
         }
     }
 
-    void submit_publish_and_response_sercices(std::shared_ptr<rrps::IServiceProvider<ArgumentType, ArgumentType>> rrpsMGR)
+    void submit_publish_and_response_services(std::shared_ptr<rrps::IProvideServiceRegistration<BaseObj, BaseObj>> provide_registrator)
     {
-        rrpsMGR->add_publish_service_register_callback("com1_arg_updated", [&](const std::string &subscriber_id, std::function<void(ArgumentType)> sub_callback)
+        provide_registrator->add_publish_service_register_callback("com1_arg_updated", [&](const std::string &subscriber_id, std::function<void(BaseObj)> sub_callback)
         {
             if (sub_callback) {
                 sub_callback_list[subscriber_id] = sub_callback;
@@ -74,39 +65,32 @@ public:
             }
         });
 
-        rrpsMGR->add_response_service_register_callback("com1_get_arg", [&](const std::string &requester_id) { return [&](ArgumentType a) { return arg; }; });
-    }
-
-    void submit_subscribe_and_requests_services(std::shared_ptr<rrps::IServiceRequester<ArgumentType, ArgumentType>> rrpsMGR)
-    {
+        provide_registrator->add_response_service_register_callback("com1_get_arg", [&](const std::string &requester_id) { return [&](BaseObj a) 
+                                                                                        { const std::lock_guard<std::mutex> lock(arg_mutex); return arg; }; });
     }
 };
 
-struct Com2 : public IRRPSCallbackInit
+struct Com2 : public rrps::IServiceRequester<BaseObj, BaseObj>
 {
 private:
     std::string id{"com2"};
     RandInt randInt{0, 3};
-    rrps::ResponseCallback<ArgumentType, ArgumentType> com1_get_arg;
+    rrps::ResponseCallback<BaseObj, BaseObj> com1_get_arg;
 
 public:
     void operator()()
     {
-        std::this_thread::sleep_for(std::chrono::seconds(randInt()));
+        //std::this_thread::sleep_for(std::chrono::seconds(randInt()));
         if(com1_get_arg) {
-            auto a = com1_get_arg(ArgumentType());
+            auto a = com1_get_arg(BaseObj());
             std::cout << "Arg requested: a:" << a.a << ", b: " << a.d << std::endl;
         }
     }
 
-    void submit_publish_and_response_sercices(std::shared_ptr<rrps::IServiceProvider<ArgumentType, ArgumentType>> rrpsMGR)
+    void submit_subscribe_and_requests_services(std::shared_ptr<rrps::IRequestServiceRegistration<BaseObj, BaseObj>> request_registrator)
     {
-    }
+        request_registrator->register_subscriber(id, "com1_arg_updated", [](BaseObj arg) { std::cout << "Arg updated: a:" << arg.a << ", b: " << arg.d << std::endl; } );
 
-    void submit_subscribe_and_requests_services(std::shared_ptr<rrps::IServiceRequester<ArgumentType, ArgumentType>> rrpsMGR)
-    {
-        rrpsMGR->register_subscriber(id, "com1_arg_updated", [](ArgumentType arg) { std::cout << "Arg updated: a:" << arg.a << ", b: " << arg.d << std::endl; } );
-
-        com1_get_arg = rrpsMGR->get_response_service(id, "com1_get_arg");
+        com1_get_arg = request_registrator->get_response_service(id, "com1_get_arg");
     }
 };
