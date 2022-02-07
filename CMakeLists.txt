@@ -1,9 +1,16 @@
-cmake_minimum_required(VERSION 3.13)  # CMake version check
-project(simple_example)               # Create project "simple_example"
-set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
+cmake_minimum_required(VERSION 3.13)
+project(multi_threaded_component_system VERSION 0.1.0 LANGUAGES CXX)
 
-# Add main.cpp file of project root directory as source file
-set(SOURCE_FILES main.cpp)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add executable target with source files listed in SOURCE_FILES variable
-add_executable(simple_example ${SOURCE_FILES})
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+
+add_subdirectory(rrps)
+
+enable_testing()
+add_executable(tester test/tester.cpp)
+target_link_libraries(tester PUBLIC rrps)
+add_test(Tester tester)

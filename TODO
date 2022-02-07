@@ -7,4 +7,5 @@ Todo:
   ✔ seperate RRPSCallbaclInit into two provider and requester interfaces @done(22-02-05 10:41)
   ☐ Save who registeres provided service or registered service in rrps manager
   ☐ Add functionality to create mape of connections
-  ☐ Add gtest for testing basic functionality
+  ✔ Add unit test @done(22-02-07 23:58)
+  ☐ Remove dependency to IServiceProvider or IServiceRequester. Usr SFINAE to check if it has the provider or requester fucntion
