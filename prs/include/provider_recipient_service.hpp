@@ -9,12 +9,12 @@
 #include "i_request_service_registrator.hpp"
 
 /*
-    rrps: Request-Respons & Publisher-Subscriber
+    prs: Request-Respons & Publisher-Subscriber
 */
-namespace rrps
+namespace prs
 {
     template <class T_return, class T_arg>
-    class ReqResPubSubManager : public IProvideServiceRegistrator<T_return, T_arg>, public IReceiveServiceRegistrator<T_return, T_arg>
+    class ProviderRecipientService : public IProvideServiceRegistrator<T_return, T_arg>, public IReceiveServiceRegistrator<T_return, T_arg>
     {
     private:
         std::mutex reg_mutex;

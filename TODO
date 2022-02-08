@@ -5,7 +5,7 @@ Todo:
   ✔ Publisher must recive the subscriber callback @done(22-02-04 09:38)
   ✔ Add std::luck_quard whereever race condition may happen @done(22-02-05 07:58)
   ✔ seperate RRPSCallbaclInit into two provider and requester interfaces @done(22-02-05 10:41)
-  ☐ Save who registeres provided service or registered service in rrps manager
+  ☐ Save who registeres provided service or registered service in prs manager
   ☐ Add functionality to create mape of connections
   ✔ Add unit test @done(22-02-07 23:58)
   ✔ Remove dependency to IServiceProvider or IServiceRequester. Usr SFINAE to check if it has the provider or requester fucntion @done(22-02-08 21:06)

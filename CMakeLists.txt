@@ -8,10 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
-add_subdirectory(rrps)
+add_subdirectory(prs)
 add_subdirectory(mtcs)
 
 enable_testing()
 add_executable(tester test/tester.cpp)
-target_link_libraries(tester PUBLIC mtcs rrps)
+target_link_libraries(tester PUBLIC mtcs prs)
 add_test(Tester tester)

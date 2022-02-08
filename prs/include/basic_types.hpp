@@ -5,9 +5,9 @@
 #include <functional>
 
 /*
-    rrps: Request-Respons & Publisher-Subscriber
+    prs: Request-Respons & Publisher-Subscriber
 */
-namespace rrps
+namespace prs
 {
     template <class T_arg>
     using SubCallback = std::function<void(T_arg)>;

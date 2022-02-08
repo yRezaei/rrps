@@ -1,5 +1,5 @@
 #include <iostream>
-#include <rrps.hpp>
+#include <provider_recipient_service.hpp>
 #include <component.hpp>
 #include <memory>
 #include <thread>
@@ -17,7 +17,7 @@ struct Com1
 private:
     const std::string id{"com1"};
     BaseObj arg{1, 5.5};
-    std::unordered_map<std::string, rrps::SubCallback<BaseObj>> sub_callback_list;
+    std::unordered_map<std::string, prs::SubCallback<BaseObj>> sub_callback_list;
     std::mutex mtx;
 
 public:
@@ -35,7 +35,7 @@ public:
         }
     }
 
-    void submit_provide_services(std::shared_ptr<rrps::IProvideServiceRegistrator<BaseObj, BaseObj>> provide_registrator)
+    void submit_provide_services(std::shared_ptr<prs::IProvideServiceRegistrator<BaseObj, BaseObj>> provide_registrator)
     {
         provide_registrator->add_publish_service_register_callback("com1_arg_updated", [&](const std::string &subscriber_id, std::function<void(BaseObj)> sub_callback)
                                                                    {
@@ -51,7 +51,7 @@ public:
                                                                       { std::lock_guard<std::mutex> lock(mtx); return arg; }; });
     }
 
-    void submit_receive_services(std::shared_ptr<rrps::IReceiveServiceRegistrator<BaseObj, BaseObj>> request_registrator)
+    void submit_receive_services(std::shared_ptr<prs::IReceiveServiceRegistrator<BaseObj, BaseObj>> request_registrator)
     {
     }
 };
@@ -60,7 +60,7 @@ struct Com2
 {
 private:
     const std::string id{"com2"};
-    mutable rrps::ResponseCallback<BaseObj, BaseObj> com1_get_arg;
+    mutable prs::ResponseCallback<BaseObj, BaseObj> com1_get_arg;
 
 public:
     void execute()
@@ -72,11 +72,11 @@ public:
         }
     }
 
-    void submit_provide_services(std::shared_ptr<rrps::IProvideServiceRegistrator<BaseObj, BaseObj>> provide_registrator)
+    void submit_provide_services(std::shared_ptr<prs::IProvideServiceRegistrator<BaseObj, BaseObj>> provide_registrator)
     {
     }
 
-    void submit_receive_services(std::shared_ptr<rrps::IReceiveServiceRegistrator<BaseObj, BaseObj>> request_registrator)
+    void submit_receive_services(std::shared_ptr<prs::IReceiveServiceRegistrator<BaseObj, BaseObj>> request_registrator)
     {
         request_registrator->register_subscriber(id, "com1_arg_updated", [](BaseObj arg)
                                                  { std::cout << "Arg updated: a:" << arg.a << ", b: " << arg.d << std::endl; });
@@ -89,7 +89,7 @@ using Components = std::vector<mtcs::Component<BaseObj, BaseObj>>;
 
 int main(int argc, char const *argv[])
 {
-    auto rrps_service_mgr = std::make_shared<rrps::ReqResPubSubManager<BaseObj, BaseObj>>();
+    auto rrps_service_mgr = std::make_shared<prs::ProviderRecipientService<BaseObj, BaseObj>>();
     Components components{};
     Com1 c1;
     Com2 c2;

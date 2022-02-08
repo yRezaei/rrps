@@ -4,9 +4,9 @@
 #include "basic_types.hpp"
 
 /*
-    rrps: Request-Respons & Publisher-Subscriber
+    prs: Request-Respons & Publisher-Subscriber
 */
-namespace rrps
+namespace prs
 {
     template <class T_return, class T_arg>
     class IProvideServiceRegistrator

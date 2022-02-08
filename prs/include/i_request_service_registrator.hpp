@@ -2,9 +2,9 @@
 #define FF8826D8_7A03_4ACF_B524_3CB03B1E7982
 
 /*
-    rrps: Request-Respons & Publisher-Subscriber
+    prs: Request-Respons & Publisher-Subscriber
 */
-namespace rrps
+namespace prs
 {
     template <class T_return, class T_arg>
     class IReceiveServiceRegistrator

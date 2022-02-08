@@ -5,10 +5,10 @@
 #include <basic_types.hpp>
 
 template <class T_return, class T_arg>
-using ProvideServiceRegistratorSPtr = std::shared_ptr<rrps::IProvideServiceRegistrator<T_return, T_arg>>;
+using ProvideServiceRegistratorSPtr = std::shared_ptr<prs::IProvideServiceRegistrator<T_return, T_arg>>;
 
 template <class T_return, class T_arg>
-using ReceiveServiceRegistratorSPtr = std::shared_ptr<rrps::IReceiveServiceRegistrator<T_return, T_arg>>;
+using ReceiveServiceRegistratorSPtr = std::shared_ptr<prs::IReceiveServiceRegistrator<T_return, T_arg>>;
 
 /*
     mtcs: Multi-threaded component system
