@@ -9,8 +9,9 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 add_subdirectory(rrps)
+add_subdirectory(mtcs)
 
 enable_testing()
 add_executable(tester test/tester.cpp)
-target_link_libraries(tester PUBLIC rrps)
+target_link_libraries(tester PUBLIC mtcs rrps)
 add_test(Tester tester)

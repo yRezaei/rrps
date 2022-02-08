@@ -8,4 +8,4 @@ Todo:
   ☐ Save who registeres provided service or registered service in rrps manager
   ☐ Add functionality to create mape of connections
   ✔ Add unit test @done(22-02-07 23:58)
-  ☐ Remove dependency to IServiceProvider or IServiceRequester. Usr SFINAE to check if it has the provider or requester fucntion
+  ✔ Remove dependency to IServiceProvider or IServiceRequester. Usr SFINAE to check if it has the provider or requester fucntion @done(22-02-08 21:06)
