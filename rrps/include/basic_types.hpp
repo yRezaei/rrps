@@ -4,6 +4,9 @@
 #include <string>
 #include <functional>
 
+/*
+    rrps: Request-Respons & Publisher-Subscriber
+*/
 namespace rrps
 {
     template <class T_arg>

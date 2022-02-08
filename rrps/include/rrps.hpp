@@ -5,14 +5,16 @@
 #include <unordered_map>
 #include <mutex>
 
-#include "i_provide_service_registration.hpp"
-#include "i_request_service_registration.hpp"
-#include "i_provider_requester_service.hpp"
+#include "i_provide_service_registrator.hpp"
+#include "i_request_service_registrator.hpp"
 
+/*
+    rrps: Request-Respons & Publisher-Subscriber
+*/
 namespace rrps
 {
     template <class T_return, class T_arg>
-    class ReqResPubSubManager : public IProvideServiceRegistration<T_return, T_arg>, public IRequestServiceRegistration<T_return, T_arg>
+    class ReqResPubSubManager : public IProvideServiceRegistrator<T_return, T_arg>, public IReceiveServiceRegistrator<T_return, T_arg>
     {
     private:
         std::mutex reg_mutex;

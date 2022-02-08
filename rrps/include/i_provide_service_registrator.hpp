@@ -3,14 +3,17 @@
 
 #include "basic_types.hpp"
 
+/*
+    rrps: Request-Respons & Publisher-Subscriber
+*/
 namespace rrps
 {
     template <class T_return, class T_arg>
-    class IProvideServiceRegistration
+    class IProvideServiceRegistrator
     {
     public:
     public:
-        virtual ~IProvideServiceRegistration() {}
+        virtual ~IProvideServiceRegistrator() {}
         virtual bool add_response_service_register_callback(const std::string &res_service_id, ResponseServiceRegisterCallback<T_return, T_arg> res_register_callback) = 0;
         virtual bool add_publish_service_register_callback(const std::string &pub_service_id, SubscribeServiceRegisterCallback<T_arg> sub_register_callback) = 0;
     };
