@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <basic_types.hpp>
+#include <provider_recipient_service.hpp>
 
 template <class T_return, class T_arg>
 using ProvideServiceRegistratorSPtr = std::shared_ptr<prs::IProvideServiceRegistrator<T_return, T_arg>>;
@@ -23,12 +24,12 @@ namespace mtcs
         Component(const ComponentType &value) = delete;
 
         template <typename ComponentType>
-        Component(ComponentType &&value) : value_(std::make_unique<Model<ComponentType, T_return, T_arg>>(value)) {}
+        Component(ComponentType &&value) : value_{new Model<ComponentType, T_return, T_arg>{value}} {}
 
         template <typename ComponentType>
         Component &operator=(ComponentType &&value)
         {
-            value_.reset(new Model<ComponentType, T_return, T_arg>(value));
+            value_.reset(new Model<ComponentType, T_return, T_arg>{value});
             return *this;
         }
 
@@ -63,7 +64,7 @@ namespace mtcs
         template <typename ComponentType, typename T_return_model, typename T_arg_model>
         struct Model : Concept<T_return_model, T_arg_model>
         {
-            Model(ComponentType &&value) : val(value) {}
+            Model(ComponentType &&value) : val{value} {}
             void execute() override
             {
                 val.execute();

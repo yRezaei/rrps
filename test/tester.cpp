@@ -1,6 +1,5 @@
 #include <iostream>
-#include <provider_recipient_service.hpp>
-#include <component.hpp>
+#include <component_manager.hpp>
 #include <memory>
 #include <thread>
 #include <chrono>
@@ -85,41 +84,14 @@ public:
     }
 };
 
-using Components = std::vector<mtcs::Component<BaseObj, BaseObj>>;
-
 int main(int argc, char const *argv[])
 {
-    auto rrps_service_mgr = std::make_shared<prs::ProviderRecipientService<BaseObj, BaseObj>>();
-    Components components{};
-    Com1 c1;
-    Com2 c2;
-    components.emplace_back(c1);
-    components.emplace_back(c2);
+    mtcs::ComponentManager<BaseObj, BaseObj> compMgr;
+    compMgr.add_component("1", Com1{})
+        .add_component("2", Com2{});
 
-    try
-    {
-        for (auto& comp : components)
-        {
-            comp.submit_provide_services(rrps_service_mgr);
-        }
-
-        for (auto& comp : components)
-        {
-            comp.submit_receive_services(rrps_service_mgr);
-        }
-
-        for (auto i = 0u; i < 10; ++i)
-        {
-            for (auto& comp : components)
-            {
-                comp.execute();
-            }
-        }
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+    compMgr.init();
+    compMgr.run();
 
     return 0;
 }
